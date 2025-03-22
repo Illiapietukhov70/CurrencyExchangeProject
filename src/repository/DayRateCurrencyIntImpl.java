@@ -45,14 +45,19 @@ public class DayRateCurrencyIntImpl implements DayRateCurrencyInt {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
             LocalDate tempDate = LocalDate.parse(splitLine[0], formatter);
-
-            if (tempDate.equals(date)) {
-                String[] splitRate = splitLine[2].split("$");
-                Arrays.stream(splitRate).forEach(elem -> {
-                String[] tempElement = elem.split("=");
-                dayRateCurrency.addRate(tempElement[0], Double.parseDouble(tempElement[1]));
-            });
+            try {
+                if (tempDate.equals(date)) {
+                    String[] splitRate = splitLine[2].split("$");
+                    Arrays.stream(splitRate).forEach(elem -> {
+                        String[] tempElement = elem.split("=");
+                        dayRateCurrency.addRate(tempElement[0], Double.parseDouble(tempElement[1]));
+                    });
+                }
+            } catch (Exception e) {
+                System.out.println(" Произошла ошибка!!!");
+                e.printStackTrace();
             }
+
         }
         br.close();
         return dayRateCurrency;
