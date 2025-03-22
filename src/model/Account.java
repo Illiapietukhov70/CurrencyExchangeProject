@@ -9,7 +9,7 @@ public class Account {
     private int accountNumber;
     private String currency;
     private double balance;
-    Map<Integer, Transaction> transactions; // todo: что это откуда взялось?
+    Map<Integer, Transaction> transactions;
 
     public Account(int accountNumber, String currency) {
         this.accountNumber = accountNumber;
