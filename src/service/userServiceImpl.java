@@ -21,26 +21,36 @@ public class userServiceImpl implements userService {
     }
     @Override
         public User registerUser(String email, String password) {
-            if (!PersonValidition.isEmailValid(email)) {
-                System.out.print("Email не прошел проверку!");
+
+
+            try {
+                if (!PersonValidition.isEmailValid(email)) {
+                    throw new IllegalArgumentException("Email не прошел проверку!");
+                }
+
+                if (!PersonValidition.isPasswordValid(password)) {
+                    throw new IllegalArgumentException("Password не прошел проверку!");
+                }
+
+                if (userRepository.isEmailExist(email)) {
+                    throw new IllegalStateException("Email уже существует!");
+                }
+
+                User user = userRepository.addUser(email, password);
+                if (this.setActiveUser(user)){
+                    return user;
+                }
+
+                return null;
+            } catch (IllegalArgumentException | IllegalStateException e) {
+                System.out.println(e.getMessage());
                 return null;
             }
 
-            if (!PersonValidition.isPasswordValid(password)) {
-                System.out.println("Password не прошел проверку!");
-                return null;
-            }
 
-            if (userRepository.isEmailExist(email)) {
-                System.out.println("Email already exists!");
-                return null;
-            }
-            User user = userRepository.addUser(email, password);
-            if (this.setActiveUser(user)){
-                return user;
-            }
-            return null;
-    }
+        }
+
+
 
     @Override
     public boolean loginUser(String email, String password) {
@@ -56,10 +66,20 @@ public class userServiceImpl implements userService {
 
     @Override
     public boolean updatePassword(String email, String newPassword) {
-        if(activeUser.getRole() == Role.ADMIN || activeUser.getEmail().equals(email)) {
-            return userRepository.updatePassword(email, newPassword);
+        try {
+            if (!PersonValidition.isPasswordValid(newPassword)) {
+                throw new IllegalArgumentException("Password не прошел проверку!");
+            }
+
+            if (activeUser.getRole() == Role.ADMIN || activeUser.getEmail().equals(email)) {
+                return userRepository.updatePassword(email, newPassword);
+            }
+            return false;
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+            return false;
         }
-        return false;
+
     }
 
     @Override
@@ -75,6 +95,7 @@ public class userServiceImpl implements userService {
 
     @Override
     public boolean blockedUser(String email) {
+
         if(activeUser.getRole() == Role.ADMIN) {
             User tempUser = userRepository.getUserByEmail(email);
             if(tempUser != null) {
@@ -111,18 +132,22 @@ public class userServiceImpl implements userService {
     @Override
     public boolean logout() throws IOException {
         BufferedWriter fileWriter = new BufferedWriter(new FileWriter("src/model/files/users.csv", false));
-        for (User user : userRepository.getAllUsers()) {
-            String [] newUserArray = new String[] {user.getEmail(),
-                    user.getPassword(),
-                    user.getRole().toString()
-            };
-            if (!user.getEmail().equals("SuperEmail")) {
+        try {
+            for (User user : userRepository.getAllUsers()) {
+                String[] newUserArray = new String[]{user.getEmail(),
+                        user.getPassword(),
+                        user.getRole().toString()
+                };
                 String newLine = String.join(";", newUserArray);
                 newLine = newLine + "\n";
                 fileWriter.write(newLine);
             }
+            fileWriter.close();
+            return true;
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            return false;
         }
-        fileWriter.close();
-        return true;
+
     }
 }

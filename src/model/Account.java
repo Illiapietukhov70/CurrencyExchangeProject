@@ -4,7 +4,7 @@ import model.MyException.NullTransactionInput;
 
 import java.util.HashMap;
 import java.util.Map;
-
+//
 public class Account {
     private int accountNumber;
     private String currency;

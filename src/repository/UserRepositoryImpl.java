@@ -56,8 +56,12 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public boolean isEmailExist(String email) {
         for (User user : users) {
-            if (user.getEmail().equalsIgnoreCase(email)) {
-                return true;
+            try {
+                if (user.getEmail().equalsIgnoreCase(email)) {
+                    return true;
+                }
+            } catch (NullPointerException e) {
+                System.out.println("Пользователь с таким email не существует: " + email);
             }
         }
         return false;
@@ -66,9 +70,14 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public User getUserByEmail(String email) {
         for (User user : users) {
-            if (user.getEmail().equalsIgnoreCase(email)) {
-                return user;
+            try {
+                if (user.getEmail().equalsIgnoreCase(email)) {
+                    return user;
+                }
+            } catch (NullPointerException e) {
+                System.out.println("Пользователь с таким email не существует: " + email);
             }
+
         }
         return null;
     }
@@ -76,10 +85,15 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public boolean updatePassword(String email, String newPassword) {
         User user = getUserByEmail(email);
-        if (user != null && PersonValidition.isPasswordValid(newPassword)) {
-            user.setPassword(newPassword);
-            return true;
+        try {
+            if (user != null && PersonValidition.isPasswordValid(newPassword)) {
+                user.setPassword(newPassword);
+                return true;
+            }
+        } catch (NullPointerException e) {
+            System.out.println("Пользователь с таким email не существует: " + email);
         }
+
         return false;
     }
 
