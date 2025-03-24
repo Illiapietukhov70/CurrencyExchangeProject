@@ -3,6 +3,7 @@ package utils;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 public class MyArrayList<T> implements MyList<T> {
     private T[] array;
@@ -291,6 +292,10 @@ public class MyArrayList<T> implements MyList<T> {
         }
     }
 
+    @Override
+    public List<T> toList() {
+        return List.of(array);
+    }
 }
 
 

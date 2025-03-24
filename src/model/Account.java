@@ -1,54 +1,88 @@
 package model;
 
 import model.MyException.NullTransactionInput;
+import utils.MyArrayList;
+import utils.MyList;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class Account {
     private int accountNumber;
+    private boolean status;
     private String currency;
     private double balance;
+    private String emailOwner;
     Map<Integer, Transaction> transactions;
 
-    public Account(int accountNumber, String currency) {
+    public Account(int accountNumber,boolean status, String currency, double balance, String emailOwner ) {
+        this.status = status;
         this.accountNumber = accountNumber;
         this.currency = currency;
+        this.balance = balance;
+        this.emailOwner = emailOwner;
         transactions = new HashMap<>();
-        balance = 0;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 
     public int getAccountNumber() {
         return accountNumber;
     }
 
-    public void setAccountNumber(int accountNumber) {
-        this.accountNumber = accountNumber;
-    }
 
     public String getCurrency() {
         return currency;
     }
 
-    public void setCurrency(String currency) {
-        this.currency = currency;
-    }
 
     public double getBalance() {
         return balance;
     }
 
+
+    public String getEmailOwner() {
+        return emailOwner;
+    }
+
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
+
     public Map<Integer, Transaction> getTransactions() {
         return transactions;
     }
-    // Добавление транзакции User
+
     public boolean addTransaction(Transaction transaction) {
+        transactions.put(transaction.getId(), transaction);
+        return true;
+    }
+
+    // Добавление транзакции User
+    public boolean initTransactions(MyList<Transaction> inputTransactions) {
         try {
-            this.transactions.put(transaction.getId(), transaction);
+            for (Transaction transaction : inputTransactions) {
+                this.transactions.put(transaction.getId(), transaction);
+            }
             return true;
-        } catch (NullPointerException e) {
+        } catch (RuntimeException e) {
             return false;
         }
+    }
+    public String toParsing (){
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(accountNumber + ";");
+        stringBuilder.append(currency + ";");
+        stringBuilder.append(balance + ";");
+        stringBuilder.append(emailOwner + ";");
+        stringBuilder.append("\n");
+        return stringBuilder.toString();
     }
 
 }

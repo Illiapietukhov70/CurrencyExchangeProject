@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class DayRateCurrency {
     private LocalDate date;
-    private String rootCurrency;
+    private final String rootCurrency;
     Map<String, Double> rates;
 
     public DayRateCurrency(String rootCurrency) {
@@ -33,12 +33,10 @@ public class DayRateCurrency {
     public Map<String, Double> getRates() {
         return rates;
     }
-    public boolean addRate(String currency, double rate) {
+    public void addRate(String currency, double rate) {
         try {
             this.rates.put(currency, rate);
         } catch (NullCurrencyInput e) {
-            return false;
         }
-        return true;
     }
 }

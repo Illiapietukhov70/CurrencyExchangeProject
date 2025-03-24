@@ -1,20 +1,23 @@
 package model;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Transaction {
+    private final static DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private int id;
-    private int amount;
-    private LocalDateTime dateTime;
-    private Account accountCredit;
-    private Account accountDebit;
+    private final double amount;
+    private final LocalDateTime dateTime;
+    private final int accountCredit;
+    private final int accountDebit;
 
-    public Transaction(int amount, Account accountCredit, Account accountDebit) {
+    public Transaction(int id, double amount, int accountCredit, int accountDebit, LocalDateTime dateTime) {
         this.id = id;
         this.amount = amount;
         this.accountCredit = accountCredit;
         this.accountDebit = accountDebit;
-        this.dateTime = LocalDateTime.now();
+        this.dateTime = dateTime;
     }
 
     public int getId() {
@@ -25,25 +28,29 @@ public class Transaction {
         this.id = id;
     }
 
-    public int getAmount() {
+    public double getAmount() {
         return amount;
-    }
-
-    public void setAmount(int amount) {
-        this.amount = amount;
     }
 
     public LocalDateTime getDateTime() {
         return dateTime;
     }
 
-
-    public Account getAccountCredit() {
+    public int getAccountCredit() {
         return accountCredit;
     }
 
-
-    public Account getAccountDebit() {
+    public int getAccountDebit() {
         return accountDebit;
+    }
+    public String toParsing () {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(id + ";");
+        stringBuilder.append(amount + ";");
+        stringBuilder.append(accountCredit + ";");
+        stringBuilder.append(accountDebit + ";");
+        stringBuilder.append(dateTime.format(dateTimeFormat));
+        stringBuilder.append("\n");
+        return stringBuilder.toString();
     }
 }

@@ -1,5 +1,7 @@
 package utils;
 
+import java.util.List;
+
 public interface MyList <T> extends Iterable<T>{
  /**
   * Добавить элемент
@@ -96,6 +98,7 @@ public interface MyList <T> extends Iterable<T>{
      * @param value T
      */
     void set (int index, T value);
+    List<T> toList();
 
 
 }
