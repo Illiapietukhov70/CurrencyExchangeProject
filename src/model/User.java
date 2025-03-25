@@ -62,7 +62,7 @@ public class User {
     public String toParsing () {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(email + ";");
-        stringBuilder.append(trueUser + ";");
+        stringBuilder.append(isTrueUser() + ";");
         stringBuilder.append(password + ";");
         stringBuilder.append(role);
         stringBuilder.append("\n");

@@ -2,6 +2,7 @@ package service;
 
 import model.*;
 import repository.AccountRepository;
+import repository.DayRateCurrencyInt;
 import repository.TransactionRepository;
 import repository.UserRepository;
 import utils.MyArrayList;
@@ -13,13 +14,13 @@ public class TransactionServiceImpl implements TransactionService {
     TransactionRepository transactionRepository;
     AccountRepository accountRepository;
     UserRepository userRepository;
-    DayRateCurrency dayRateCurrency;
+    DayRateCurrencyInt dayRateCurrencyInt;
 
-    public TransactionServiceImpl(TransactionRepository transactionRepository, AccountRepository accountRepository, UserRepository userRepository, DayRateCurrency dayRateCurrency) {
+    public TransactionServiceImpl(TransactionRepository transactionRepository, AccountRepository accountRepository, UserRepository userRepository, DayRateCurrencyInt dayRateCurrencyInt) {
         this.transactionRepository = transactionRepository;
         this.accountRepository = accountRepository;
         this.userRepository = userRepository;
-        this.dayRateCurrency = dayRateCurrency;
+        this.dayRateCurrencyInt = dayRateCurrencyInt;
     }
 
     @Override
@@ -50,7 +51,7 @@ public class TransactionServiceImpl implements TransactionService {
                 .forEach(entry -> {
                     outTransactions.add(transactionRepository.getTransaction(entry.getKey()));
                 });
-        if (!outTransactions.isEmpty() || dayRateCurrency != null) {
+        if (!outTransactions.isEmpty() || dayRateCurrencyInt != null) {
             return outTransactions;
         }
         return null;
@@ -71,7 +72,7 @@ public class TransactionServiceImpl implements TransactionService {
                 accountDebitUser.addTransaction(transaction);
 
                 String currency = accountCreditUser.getCurrency();
-                accountCreditUser.setBalance(accountCreditUser.getBalance() + amount * dayRateCurrency.getRates().get(currency));
+                accountCreditUser.setBalance(accountCreditUser.getBalance() + amount * dayRateCurrencyInt.getActiveDayRateCurrency().getRates().get(currency));
                 accountCreditUser.addTransaction(transaction);
             }
         }

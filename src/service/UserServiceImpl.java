@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
             return null;
         }
 
-        if (userRepository.getUserByEmail(email) == null) {
+        if (userRepository.getUserByEmail(email) != null) {
             System.out.println("Email already exists!");
             return null;
         }

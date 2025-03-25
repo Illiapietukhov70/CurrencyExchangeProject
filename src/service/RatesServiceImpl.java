@@ -31,9 +31,4 @@ public class RatesServiceImpl implements RatesService {
         }
         return null;
     }
-
-    @Override
-    public CurrencyWiki getCurrencyWiki() throws IOException {
-           return new CurrencyWiki();
-    }
 }
