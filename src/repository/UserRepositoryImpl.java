@@ -91,7 +91,9 @@ public class UserRepositoryImpl implements UserRepository {
         try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(FILE_PATH, false))){
             users.toList().forEach(user -> {
                 try {
-                    bufferedWriter.write(user.toParsing());
+                    if(user.getEmail()!= "SuperEmail"){
+                        bufferedWriter.write(user.toParsing());
+                    }
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
