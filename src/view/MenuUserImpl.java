@@ -23,20 +23,18 @@ public class MenuUserImpl extends MenuMain implements MenuUser {
 
     private void addAllTitles() {
         menuTitle.put(1, "Сменить пароль" );
-        menuTitle.put(2, "Удалить аккаунт");
-        menuTitle.put(3, "Меню счетов");
-        menuTitle.put(4, "Logout");
-        menuTitle.put(5, "Вернуться в предыдущее меню");
+        menuTitle.put(2, "Меню счетов");
+        menuTitle.put(3, "Logout");
+        menuTitle.put(4, "Вернуться в предыдущее меню");
     }
     public void startMenu() {
         printMenu();
-        int result = scanMenu(5);
+        int result = scanMenu(4);
         switch (result) {
             case 1 -> updatePassword();
-            case 2 -> deleteAccount();
-            case 3 -> showMenuUserAccounts();
-            case 4 -> logoutUser();
-            case 5 -> returnLastMenu();
+            case 2 -> showMenuUserAccounts();
+            case 3 -> logoutUser();
+            case 4 -> returnLastMenu();
         }
     }
 
@@ -51,37 +49,6 @@ public class MenuUserImpl extends MenuMain implements MenuUser {
         } else {
             System.out.println("Пароль не изменен");
             startMenu();
-        }
-
-    }
-
-    @Override
-    public void deleteAccount() {
-        User activeUser = userService.getActiveUser();
-        MyList<Account> userAccounts = accountService.getAccountsByEmailOwner(activeUser.getEmail());
-        System.out.println("Выберите Счет для закрытия");
-        System.out.println(userAccounts);
-        Scanner scanner = new Scanner(System.in);
-        int accountId = scanner.nextInt();
-        scanner.nextLine();
-        Account accountForDelete = null;
-        try {
-            Account account = userAccounts.get(accountId);
-            accountForDelete = account;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if(accountForDelete.getBalance() > 0) {
-            System.out.println("Перед удалением обнулите счет на сумму: "
-                    + accountForDelete.getBalance() + " " + accountForDelete.getCurrency());
-        } else {
-            Account deleteAccount = accountService.deleteAccount(accountId);
-            if(deleteAccount != null) {
-            System.out.println("Счет: " + deleteAccount.getAccountNumber() + " " + deleteAccount.getCurrency() +
-                    " успешно удален!");
-            } else {
-                System.out.println("404");
-            }
         }
 
     }
