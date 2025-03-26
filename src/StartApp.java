@@ -10,15 +10,14 @@ import java.time.LocalDate;
 
 public class StartApp {
     public static void main(String[] args) throws IOException, ParseException {
-        CurrencyWiki wiki = new CurrencyWiki();
-        DayRateCurrencyInt dayRateCurrencyInt = new DayRateCurrencyIntImpl();
-        TransactionRepository transactionRepository = new TransactionRepositoryImpl();
-        AccountRepository accountRepository = new AccountRepositoryImpl(transactionRepository);
-        UserRepository userRepository = new UserRepositoryImpl(accountRepository);
-        TransactionService transactionService = new TransactionServiceImpl(transactionRepository, accountRepository, userRepository, dayRateCurrencyInt);
-        AccountService accountService = new AccountServiceImpl(transactionRepository, userRepository, accountRepository);
-        UserService userService = new UserServiceImpl(userRepository, accountRepository);
-        RatesService ratesService = new RatesServiceImpl(dayRateCurrencyInt);
+        initClass.init();
+        TransactionService transactionService = initClass.getTransactionService();
+        AccountService accountService = initClass.getAccountService();
+        UserService userService = initClass.getUserService();
+        RatesService ratesService = initClass.getRatesService();
+        TransactionRepository transactionRepository = initClass.getTransactionRepository();
+        AccountRepository accountRepository = initClass.getAccountRepository();
+        UserRepository userRepository = initClass.getUserRepository();
 
         WelcomeMenu welcomeMenu = new WelcomeMenu(userService, accountService, transactionService, ratesService);
         welcomeMenu.startMenu();
