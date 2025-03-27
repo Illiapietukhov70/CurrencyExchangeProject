@@ -9,6 +9,9 @@ import utils.MyArrayList;
 import utils.MyList;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class TransactionServiceImpl implements TransactionService {
     TransactionRepository transactionRepository;
@@ -46,11 +49,13 @@ public class TransactionServiceImpl implements TransactionService {
         //Проверка на Роль Администратора или на User принадлежность данной транзакции
         User tempUser = userRepository.getUserByEmail(emailUser);
         MyList<Transaction> outTransactions = new MyArrayList<>();
-        tempUser.getAccounts()
-                .entrySet()
-                .forEach(entry -> {
-                    outTransactions.add(transactionRepository.getTransaction(entry.getKey()));
-                });
+        tempUser.getAccounts().keySet().stream().forEach(account -> {
+            MyList <Transaction> tempDebit= transactionRepository.getTransactionsByAccountDebit(account);
+            tempDebit.toList().stream().forEach(outTransactions::add);
+            MyList <Transaction> tempCredit= transactionRepository.getTransactionsByAccountCredit(account);
+            tempCredit.toList().stream().forEach(outTransactions::add);
+        });
+
         if (!outTransactions.isEmpty() || dayRateCurrencyInt != null) {
             return outTransactions;
         }
@@ -63,12 +68,12 @@ public class TransactionServiceImpl implements TransactionService {
         Account accountCreditUser = accountRepository.getAccount(accountCredit);
         User userCredit = userRepository.getUserByEmail(accountCreditUser.getEmailOwner());
 
-        System.out.println(userCredit);
+        System.out.print("Credit: " + accountCreditUser.toParsing());
 
         Account accountDebitUser = accountRepository.getAccount(accountDebit);
         User userDebit = userRepository.getUserByEmail(accountDebitUser.getEmailOwner());
 
-        System.out.println(userDebit);
+        System.out.print("Debit: " + accountDebitUser.toParsing());
 
         if(userCredit.getRole()!=Role.BLOCKED && userDebit.getRole()!=Role.BLOCKED) {
             if(accountDebitUser.getBalance() >= amount) {

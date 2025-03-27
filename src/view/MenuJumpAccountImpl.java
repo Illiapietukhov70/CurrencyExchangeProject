@@ -53,7 +53,7 @@ public class MenuJumpAccountImpl extends MenuMain implements MenuJumpAccount {
             case 3 -> deleteAccount();
             case 4 -> makeTransaction();
             case 5 -> showMyTransactions();
-            case 6 -> showMayAllAccounts();
+            case 6 -> showMyAllAccounts();
             case 7 -> logoutUser();
             case 8 -> returnLastMenu();
         }
@@ -128,12 +128,13 @@ public class MenuJumpAccountImpl extends MenuMain implements MenuJumpAccount {
     @Override
     public void showMyTransactions() {
         MyList<Transaction> transactions = transactionService.getTransactionsByEmailUser(userAccount.getEmailOwner());
+        System.out.println(transactions.size() + " size Transaction");
         if (transactions != null) {
             transactions.toList().forEach(t -> {
                 StringBuilder stringBuilder = new StringBuilder();
                 stringBuilder.append("Id :" + t.getId() + " | ");
                 stringBuilder.append("Ammount :" + t.getAmount() + " | ");
-                stringBuilder.append("Currency :" + accountService.getAccount(t.getId()).getCurrency() + " | ");
+                stringBuilder.append("Currency :" + accountService.getAccount(t.getAccountDebit()).getCurrency() + " | ");
                 stringBuilder.append("Отправитель :" + accountService.getAccount(t.getAccountCredit()).getEmailOwner() + "| ");
                 stringBuilder.append("Получатель :" + accountService.getAccount(t.getAccountDebit()).getEmailOwner() + " | ");
                 stringBuilder.append("Дата время :" + t.getDateTime());
@@ -147,10 +148,10 @@ public class MenuJumpAccountImpl extends MenuMain implements MenuJumpAccount {
     }
 
     @Override
-    public void showMayAllAccounts() {
+    public void showMyAllAccounts() {
         String emailOwner = userAccount.getEmailOwner();
         MyList<Account> accounts = accountService.getAccountsByEmailOwner(emailOwner);
-        System.out.println(accounts);
+        accounts.toList().stream().forEach(e -> System.out.println(e.toParsing()));
     }
 
     @Override

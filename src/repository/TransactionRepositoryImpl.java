@@ -7,7 +7,6 @@ import utils.MyList;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class TransactionRepositoryImpl implements TransactionRepository {
@@ -65,13 +64,13 @@ public class TransactionRepositoryImpl implements TransactionRepository {
 
     @Override
     public MyList<Transaction> getTransactionsByAccountCredit(int accountCredit) {
-        MyList<Transaction> transactions = new MyArrayList<>();
+        MyList<Transaction> outTransactions = new MyArrayList<>();
         for (Transaction transaction : transactions) {
             if (transaction.getAccountCredit() == accountCredit) {
-                transactions.add(transaction);
+                outTransactions.add(transaction);
             }
         }
-        return transactions;
+        return  outTransactions;
     }
 
     @Override
@@ -82,6 +81,6 @@ public class TransactionRepositoryImpl implements TransactionRepository {
                 transactions.add(transaction);
             }
         }
-        return transactions;
+        return  transactions;
     }
 }

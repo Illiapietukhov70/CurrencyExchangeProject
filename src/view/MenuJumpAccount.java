@@ -8,7 +8,7 @@ public interface MenuJumpAccount {
     void deleteAccount();
     void makeTransaction() throws IOException;
     void showMyTransactions();
-    void showMayAllAccounts();
+    void showMyAllAccounts();
     void returnLastMenu() throws IOException;
     void logoutUser() throws IOException;
 }
