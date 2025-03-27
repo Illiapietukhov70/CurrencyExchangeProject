@@ -5,9 +5,10 @@ import java.io.IOException;
 
 public interface MenuUser {
 
-    void updatePassword() throws IOException;
-    void showMenuUserAccounts() throws IOException;
-    void logoutUser() throws IOException;
-    void returnLastMenu() throws IOException;
+    void updatePassword();
+    void deleteAccount();
+    void showMenuUserAccounts();
+    void logoutUser();
+    void returnLastMenu();
 
 }
