@@ -74,7 +74,9 @@ public class AccountRepositoryImpl implements AccountRepository {
     @Override
     public MyArrayList<Account> getAccountsByEmailOwner(String emailOwner) {
         MyArrayList<Account> newAccounts = new MyArrayList<>();
-        accounts.toList().stream().filter(account -> account.getEmailOwner().equals(emailOwner)).forEach(newAccounts::add);
+        accounts.toList().stream()
+                .filter(account -> account.getEmailOwner().equals(emailOwner))
+                .forEach(newAccounts::add);
         return newAccounts;
     }
 

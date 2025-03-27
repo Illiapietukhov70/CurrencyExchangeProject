@@ -1,9 +1,6 @@
 package service;
 
-
-
 import model.Role;
-import model.Transaction;
 import model.User;
 import repository.AccountRepository;
 import repository.UserRepository;
@@ -12,9 +9,7 @@ import utils.PersonValidition;
 
 import java.io.IOException;
 
-
 public class UserServiceImpl implements UserService {
-
     private final AccountRepository accountRepository;
     private final UserRepository userRepository;
     private User activeUser;
@@ -42,7 +37,7 @@ public class UserServiceImpl implements UserService {
             return null;
         }
         User user = userRepository.addUser(email, password);
-        if (this.setActiveUser(user)){
+        if (this.setActiveUser(user)) {
             return user;
         }
         return null;
@@ -62,7 +57,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean updatePassword(String email, String newPassword) {
-        if(activeUser.getRole() == Role.ADMIN || activeUser.getEmail().equals(email)) {
+        if (activeUser.getRole() == Role.ADMIN || activeUser.getEmail().equals(email)) {
             return userRepository.updatePassword(email, newPassword);
         }
         return false;
@@ -70,7 +65,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserByEmail(String email) {
-        if(activeUser.getRole() == Role.ADMIN || activeUser.getEmail().equals(email)) {}
+        if (activeUser.getRole() == Role.ADMIN || activeUser.getEmail().equals(email)) {
+        }
         return userRepository.getUserByEmail(email);
     }
 
@@ -82,7 +78,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean deleteUser(String email) {
-        if(activeUser.getRole() == Role.ADMIN) {
+        if (activeUser.getRole() == Role.ADMIN) {
             User deleteUser = userRepository.getUserByEmail(email);
             if (deleteUser != null) {
                 deleteUser.setTrueUser(false);
@@ -94,9 +90,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean blockedUser(String email) {
-        if(activeUser.getRole() == Role.ADMIN) {
+        if (activeUser.getRole() == Role.ADMIN) {
             User tempUser = userRepository.getUserByEmail(email);
-            if(tempUser != null) {
+            if (tempUser != null) {
                 tempUser.setRole(Role.BLOCKED);
                 return true;
             }
@@ -106,7 +102,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public MyList<User> getAllUsers() {
-        if(activeUser.getRole() == Role.ADMIN) {
+        if (activeUser.getRole() == Role.ADMIN) {
             return userRepository.getAllUsers();
         }
         return null;
@@ -114,7 +110,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean setActiveUser(User user) {
-        if(user instanceof User) {
+        if (user instanceof User) {
             this.activeUser = user;
             return true;
         }
@@ -123,9 +119,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean logout() throws IOException {
-        if(userRepository.logoutUserRepository() && accountRepository.logoutAccountRepository()) {
+        if (userRepository.logoutUserRepository() && accountRepository.logoutAccountRepository()) {
             return true;
         }
         return false;
     }
 }
+
