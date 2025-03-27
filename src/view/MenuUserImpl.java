@@ -4,44 +4,51 @@ import model.Account;
 import model.MenuMain;
 import model.User;
 import service.AccountService;
+import service.RatesService;
+import service.TransactionService;
 import service.UserService;
 import utils.MyList;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 public class MenuUserImpl extends MenuMain implements MenuUser {
     UserService userService;
     AccountService accountService;
+    TransactionService transactionService;
+    RatesService ratesService;
 
 
-    public MenuUserImpl(UserService userService, AccountService accountService) {
+    public MenuUserImpl(UserService userService, AccountService accountService, TransactionService transactionService, RatesService ratesService) throws IOException {
         super();
         this.userService = userService;
         this.accountService = accountService;
+        this.transactionService = transactionService;
+        this.ratesService = ratesService;
+        addAllTitles();
+        startMenu();
 
     }
 
     private void addAllTitles() {
         menuTitle.put(1, "Сменить пароль" );
-        menuTitle.put(2, "Удалить аккаунт");
-        menuTitle.put(3, "Меню счетов");
-        menuTitle.put(4, "Logout");
-        menuTitle.put(5, "Вернуться в предыдущее меню");
+        menuTitle.put(2, "Меню счетов");
+        menuTitle.put(3, "Logout");
+        menuTitle.put(4, "Вернуться в предыдущее меню");
     }
-    public void startMenu() {
+    public void startMenu() throws IOException {
         printMenu();
-        int result = scanMenu(5);
+        int result = scanMenu(4);
         switch (result) {
             case 1 -> updatePassword();
-            case 2 -> deleteAccount();
-            case 3 -> showMenuUserAccounts();
-            case 4 -> logoutUser();
-            case 5 -> returnLastMenu();
+            case 2 -> showMenuUserAccounts();
+            case 3 -> logoutUser();
+            case 4 -> returnLastMenu();
         }
     }
 
     @Override
-    public void updatePassword() {
+    public void updatePassword() throws IOException {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Введите новый пароль: ");
         String newPassword = scanner.nextLine();
@@ -55,49 +62,30 @@ public class MenuUserImpl extends MenuMain implements MenuUser {
 
     }
 
+
     @Override
-    public void deleteAccount() {
-        User activeUser = userService.getActiveUser();
-        MyList<Account> userAccounts = accountService.getAccountsByEmailOwner(activeUser.getEmail());
-        System.out.println("Выберите Счет для закрытия");
-        System.out.println(userAccounts);
-        Scanner scanner = new Scanner(System.in);
-        int accountId = scanner.nextInt();
-        scanner.nextLine();
-        Account accountForDelete = null;
-        try {
-            Account account = userAccounts.get(accountId);
-            accountForDelete = account;
-        } catch (Exception e) {
-            e.printStackTrace();
+    public void showMenuUserAccounts() throws IOException {
+        MenuUserAccountsImpl menuUserAccounts = new MenuUserAccountsImpl(userService,transactionService, accountService, ratesService);
+        menuUserAccounts.startMenu();
+
+    }
+
+    @Override
+    public void logoutUser() throws IOException {
+        boolean userLogout = userService.logout();
+        if(userLogout) {
+            System.out.println("Logout successful");
+            System.exit(0);
         }
-        if(accountForDelete.getBalance() > 0) {
-            System.out.println("Перед удалением обнулите счет на сумму: "
-                    + accountForDelete.getBalance() + " " + accountForDelete.getCurrency());
-        } else {
-            Account deleteAccount = accountService.deleteAccount(accountId);
-            if(deleteAccount != null) {
-            System.out.println("Счет: " + deleteAccount.getAccountNumber() + " " + deleteAccount.getCurrency() +
-                    " успешно удален!");
-            } else {
-                System.out.println("404");
-            }
+        else {
+            System.out.println("Logout failed");
+            System.exit(1);
         }
-
     }
 
     @Override
-    public void showMenuUserAccounts() {
-
-    }
-
-    @Override
-    public void logoutUser() {
-
-    }
-
-    @Override
-    public void returnLastMenu() {
-
+    public void returnLastMenu() throws IOException {
+        WelcomeMenu welcomeMenu = new WelcomeMenu(userService , accountService, transactionService, ratesService);
+        welcomeMenu.startMenu();
     }
 }

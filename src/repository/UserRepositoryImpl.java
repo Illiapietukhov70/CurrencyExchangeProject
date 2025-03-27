@@ -34,7 +34,7 @@ public class UserRepositoryImpl implements UserRepository {
                 String email = fields[0];
                 String password = fields[2];
                 User user = new User(email, password);
-                user.setTrueUser(Boolean.getBoolean(fields[1]));
+                user.setTrueUser(Boolean.parseBoolean(fields[1]));
                 Role role = Role.valueOf(fields[3]);
                 user.setRole(role);
                 accountRepository.getAccountsByEmailOwner(user.getEmail()).forEach(user::addAccount);

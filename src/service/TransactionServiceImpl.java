@@ -59,11 +59,16 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public Transaction makeTransaction(double amount, int accountCredit, int accountDebit) throws IOException {
+        Transaction transactionOut = null;
         Account accountCreditUser = accountRepository.getAccount(accountCredit);
         User userCredit = userRepository.getUserByEmail(accountCreditUser.getEmailOwner());
 
+        System.out.println(userCredit);
+
         Account accountDebitUser = accountRepository.getAccount(accountDebit);
         User userDebit = userRepository.getUserByEmail(accountDebitUser.getEmailOwner());
+
+        System.out.println(userDebit);
 
         if(userCredit.getRole()!=Role.BLOCKED && userDebit.getRole()!=Role.BLOCKED) {
             if(accountDebitUser.getBalance() >= amount) {
@@ -71,12 +76,18 @@ public class TransactionServiceImpl implements TransactionService {
                 accountDebitUser.setBalance(accountDebitUser.getBalance() - amount);
                 accountDebitUser.addTransaction(transaction);
 
-                String currency = accountCreditUser.getCurrency();
-                accountCreditUser.setBalance(accountCreditUser.getBalance() + amount * dayRateCurrencyInt.getActiveDayRateCurrency().getRates().get(currency));
+                String currencyCredit = accountCreditUser.getCurrency();
+                String currencyDebit = accountDebitUser.getCurrency();
+                amount = amount * dayRateCurrencyInt.getActiveDayRateCurrency().getRates().get(currencyCredit) /
+                dayRateCurrencyInt.getActiveDayRateCurrency().getRates().get(currencyDebit);
+
+                accountCreditUser.setBalance(accountCreditUser.getBalance() + amount);
                 accountCreditUser.addTransaction(transaction);
+                transactionOut = transaction;
             }
+
         }
 
-        return null;
+        return transactionOut;
     }
 }

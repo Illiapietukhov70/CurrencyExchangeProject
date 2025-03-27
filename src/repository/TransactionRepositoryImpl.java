@@ -29,7 +29,7 @@ public class TransactionRepositoryImpl implements TransactionRepository {
            String line;
            while ((line = br.readLine()) != null) {
                String[] data = line.split(";");
-               LocalDateTime dateTime = LocalDateTime.parse(data[0], dateTimeFormat);
+               LocalDateTime dateTime = LocalDateTime.parse(data[4], dateTimeFormat);
                Transaction transaction = new Transaction(Integer.parseInt(data[0]), Double.parseDouble(data[1]), Integer.parseInt(data[2]),Integer.parseInt(data[3]), dateTime);
                transactions.add(transaction);
            }

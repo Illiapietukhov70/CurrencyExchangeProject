@@ -78,6 +78,7 @@ public class Account {
     public String toParsing (){
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(accountNumber + ";");
+        stringBuilder.append(isStatus() + ";");
         stringBuilder.append(currency + ";");
         stringBuilder.append(balance + ";");
         stringBuilder.append(emailOwner + ";");

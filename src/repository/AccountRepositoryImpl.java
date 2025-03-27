@@ -29,7 +29,7 @@ public class AccountRepositoryImpl implements AccountRepository {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] data = line.split(";");
-                Account newAccount = new Account(Integer.parseInt(data[0]), Boolean.getBoolean(data[1]), data[2], Double.parseDouble(data[3]), data[4]);
+                Account newAccount = new Account(Integer.parseInt(data[0]), Boolean.parseBoolean(data[1]), data[2], Double.parseDouble(data[3]), data[4]);
                 this.accounts.add(newAccount);
             }
         }
@@ -74,8 +74,8 @@ public class AccountRepositoryImpl implements AccountRepository {
     @Override
     public MyArrayList<Account> getAccountsByEmailOwner(String emailOwner) {
         MyArrayList<Account> newAccounts = new MyArrayList<>();
-       accounts.toList().stream().filter(account -> account.getEmailOwner().equals(emailOwner)).forEach(newAccounts::add);
-       return newAccounts;
+        accounts.toList().stream().filter(account -> account.getEmailOwner().equals(emailOwner)).forEach(newAccounts::add);
+        return newAccounts;
     }
 
     @Override

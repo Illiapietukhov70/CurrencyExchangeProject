@@ -3,6 +3,7 @@ import repository.*;
 import service.*;
 import view.WelcomeMenu;
 
+
 import java.io.IOException;
 import java.text.ParseException;
 import java.time.LocalDate;
@@ -19,9 +20,12 @@ public class StartApp {
         UserService userService = new UserServiceImpl(userRepository, accountRepository);
         RatesService ratesService = new RatesServiceImpl(dayRateCurrencyInt);
 
-
-        WelcomeMenu welcomeMenu = new WelcomeMenu(userService);
+        WelcomeMenu welcomeMenu = new WelcomeMenu(userService, accountService, transactionService, ratesService);
         welcomeMenu.startMenu();
+
+
+
+
 
 
 

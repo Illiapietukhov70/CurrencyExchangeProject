@@ -1,23 +1,28 @@
 package view;
 
-
 import model.MenuMain;
 import model.Role;
 import model.User;
+import service.AccountService;
+import service.RatesService;
+import service.TransactionService;
 import service.UserService;
 
-
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.Scanner;
 
 public class WelcomeMenu extends MenuMain {
-    private final UserService userService;
+    UserService userService;
+    AccountService accountService;
+    TransactionService transactionService;
+    RatesService ratesService;
 
-
-    public WelcomeMenu(UserService userService) {
-        super();
+    public WelcomeMenu(UserService userService, AccountService accountService, TransactionService transactionService, RatesService ratesService) {
         this.userService = userService;
-
+        this.accountService = accountService;
+        this.transactionService = transactionService;
+        this.ratesService = ratesService;
         addAllTitles();
 
 
@@ -40,7 +45,6 @@ public class WelcomeMenu extends MenuMain {
         }
 
     }
-
     private void loginUser() throws IOException {
         System.out.println("Для входа в систему введите Ваш Email: ");
         Scanner scanner = new Scanner(System.in);
@@ -52,20 +56,20 @@ public class WelcomeMenu extends MenuMain {
             if (tempUser != null) {
                 Role role = tempUser.getRole();
                 System.out.println(role);
-//                switch (role) {
+                switch (role) {
 //                    case ADMIN -> {
 //                        MenuAdminImpl menuAdmin = new MenuAdminImpl(userService, bookService, userRepository, bookRepository);
 //                        menuAdmin.startMenu();
 //                    }
-//                    case USER -> {
-//                        MenuUserImpl menuUser = new MenuUserImpl(userService, bookService, userRepository, bookRepository);
-//                        menuUser.startMenu();
-//                    }
+                    case USER -> {
+                        MenuUserImpl menuUser = new MenuUserImpl(userService, accountService, transactionService, ratesService );
+                        menuUser.startMenu();
+                    }
 //                    case BLOCKED -> {
 //                        MenuBlockedImpl menuBlocked = new MenuBlockedImpl(userService, bookService, userRepository, bookRepository);
 //                        menuBlocked.startMenu();
 //                    }
-//                }
+                }
             }
         } else {
             System.out.println("Email или Пароль не верны!");
@@ -81,19 +85,17 @@ public class WelcomeMenu extends MenuMain {
         String password = scanner.nextLine();
         System.out.println(email + " " + password);
         User user = userService.registerUser(email, password);
-        System.out.println(user);
-        userService.logout();
-//        if (user != null) {
-//            MenuUserImpl menuUser = new MenuUserImpl(userService, bookService, userRepository, bookRepository);
-//            menuUser.startMenu();
-//        }
+        if (user != null) {
+            MenuUserImpl menuUser = new MenuUserImpl(userService, accountService, transactionService, ratesService );
+            menuUser.startMenu();
+        }
         scanner.close();
 
 
     }
 
-    private void logoutUser() {
-        System.out.println("Logout");
+    private void logoutUser() throws IOException {
+        userService.logout();
         System.exit(0);
     }
 }
