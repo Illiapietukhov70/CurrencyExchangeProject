@@ -106,7 +106,17 @@ class  UserServiceImplTest {
         userService.setActiveUser(testUserNext);
         String testEmail = userService.getUserByEmail("super@pupper.com").getEmail();
         assertNotEquals(userService.getActiveUser().getEmail(), testEmail);
+
     }
+    @Test
+    void logout() throws Exception {
+        User testUserNext = userService.registerUser("super@pupperpupper.com", "Super12345+");
+        testUserNext.setRole(Role.ADMIN);
+        userService.setActiveUser(testUserNext);
+        userService.logout();
+        assertEquals(userService.getActiveUser(), null);
+    }
+
 
 
 
